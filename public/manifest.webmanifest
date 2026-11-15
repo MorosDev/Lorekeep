@@ -1,0 +1,14 @@
+{
+  "name": "Lorekeep",
+  "short_name": "Lorekeep",
+  "description": "El guardián de tus mundos ficticios",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#110e17",
+  "theme_color": "#110e17",
+  "lang": "es",
+  "icons": [
+    { "src": "icono.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
