@@ -83,6 +83,7 @@ export default function Ficha() {
         <div className="acciones">
           <Link className="btn oro" to={`/m/${mid}/f/${f.id}/editar`}>✎ Editar</Link>
           <button className="btn" onClick={() => setRelacionando(true)}>⟁ Relacionar</button>
+          <Link className="btn" to={`/m/${mid}/arbol/${f.id}`}>⚭ Árbol</Link>
           <button className="btn peligro solo" onClick={() => setBorrando(true)} aria-label="Borrar ficha" title="Borrar ficha">🗑</button>
         </div>
       </div>

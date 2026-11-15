@@ -179,3 +179,17 @@ a.chip:hover { border-color: var(--oro); text-decoration: none; }
 .vacio-grande .simbolo { font-size: 40px; color: var(--oro); }
 .aviso { position: fixed; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); left: 50%; transform: translateX(-50%); background: var(--panel2); border: 1px solid var(--oro); color: var(--texto); padding: 10px 16px; border-radius: 999px; z-index: 60; font-size: 14px; }
 .oculto-visual { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* Árbol genealógico: tarjetas encima de un SVG con las líneas */
+.lienzo-arbol { border: 1px solid var(--raya); border-radius: var(--radio); background: #0b0910; overflow: auto; max-height: 74vh; }
+.arbol-tarjeta {
+  position: absolute; display: flex; align-items: center; gap: 10px; padding: 10px 12px; text-align: left; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--raya); border-radius: 10px; color: var(--texto);
+}
+.arbol-tarjeta:hover { border-color: var(--oro); }
+.arbol-tarjeta.raiz { border-color: var(--oro); box-shadow: 0 0 0 3px var(--oro-suave); }
+.arbol-tarjeta .nombre { display: block; font: 600 14px var(--f-titulo); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.arbol-tarjeta .meta { display: block; font-size: 12px; color: var(--tenue); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.arbol-linea { fill: none; stroke: #6b5b45; stroke-width: 1.6; }
+.arbol-pareja line { stroke: var(--oro); stroke-width: 1.4; }
+.arbol-hermanos { fill: none; stroke: #5a4f68; stroke-width: 1.4; stroke-dasharray: 4 4; }

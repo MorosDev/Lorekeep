@@ -5,6 +5,11 @@
 ## Qué es
 App web (PWA instalable) para crear mundos ficticios, de **Moros** (principiante: respuestas en español, cortas y sin tecnicismos; comentarios del código en español explicando el *porqué*). Proyecto aparte de su bot Null (`MorosDev/null2`).
 
+## Sobre Moros y cómo ayudarle (lo pidió el 15 nov 2026)
+- Claude trabaja de lleno solo en **tres proyectos**: `MorosDev/null2` (su bot), este (**Lorekeep**, que Moros quiere solo para él) y **Forja ANSI** (el taller de arte ASCII/ANSI, hoy un artifact), más lo que él pida.
+- Moros quiere **aprender a programar de verdad**, sobre todo para **ghost-bot**, un bot más grande que Null que va a escribir **él**. Ahí Claude **enseña, no escribe por él**: explica, propone ejercicios, revisa su código y le da pistas antes que soluciones.
+- Aun en estos proyectos, cuando haya algo nuevo e interesante, explícale en 2-3 líneas la idea clave (sin sermón), para que vaya aprendiendo de lo que ve.
+
 ## Cómo se trabaja
 - Rama principal: **`main`**. Cambios chicos, probados (`npm run build` sin errores + probar en navegador con Playwright), PR a `main` y unirlo uno mismo al pasar las pruebas (como en null2). Si algo borra o cambia datos guardados, preguntar antes.
 - GitHub Pages publica solo con cada push a `main`. En el repo: Settings → Pages → Source = **GitHub Actions**.
@@ -15,11 +20,12 @@ App web (PWA instalable) para crear mundos ficticios, de **Moros** (principiante
 - **Fichas:** `{ id, mundoId, tipo, nombre, resumen, imagen, datos, listas, secciones, etiquetas, extras }`. `datos[x]` es texto o `{ ref: idDeFicha }`. Los tipos y lo que pregunta cada uno: `src/plantillas.js` (`CATEGORIAS_BASE` se copia a cada mundo nuevo; cada mundo puede editar las suyas en Ajustes; tipos inventados usan `PLANTILLA_LIBRE`).
 - **Menciones:** `@Nombre` / `@[Nombre con espacios]`, se resuelven por nombre al mostrar (`TextoLore`, `mencionesDe` en `src/componentes/util.jsx`). No se guardan como ids: si renombras una ficha, las menciones viejas quedan "rotas" (se ven en gris). Pendiente: ofrecer renombrar las menciones.
 - **Exportar/importar:** `exportarMundo` / `importarMundo` (siempre importa como mundo nuevo con ids nuevos; cambia también las refs de `datos`, eventos y pines).
+- **Árbol genealógico** (`src/familia.js` + `src/vistas/Arbol.jsx`, ruta `#/m/:mid/arbol/:fid`, "Linajes" en la barra): sale de las relaciones normales; `tipoFamiliar()` reconoce padre/madre, hijo/a, hermano/a, pareja/esposo… aunque se escriban a mano. `armarArbol()` pone generaciones (padres −1, hijos +1), ordena cada fila cerca del promedio de sus padres/hijos (3 vueltas) y junta parejas. Desde el centro se agregan familiares (existentes o nuevos). Tocar a alguien lo vuelve el centro.
 - Vistas en `src/vistas/`: Inicio, Mundo (armazón con barra lateral; pasa `{ mundo, fichas, nombres, mid }` por `useOutletContext`), Compendio, Categoria (+ `NuevaFicha`), Ficha, EditarFicha (guarda solo a los 500 ms), Relaciones (Cytoscape, carga diferida), Cronologia, Mapas, Mapa (Leaflet `CRS.Simple`: pines en pixeles de la imagen; carga diferida), Ajustes.
 - Estilo: `src/estilos.css`, oscuro (tinta violeta + oro). Cinzel (títulos), Alegreya (lore), Inter (interfaz), con `@fontsource` (funcionan sin internet). `public/sw.js`: primero la red, si no hay, lo guardado.
 
 ## Pendientes (ideas de Moros, en orden sugerido)
-1. Árbol genealógico (desde las relaciones de `FAMILIA` en `plantillas.js`).
+1. ~~Árbol genealógico~~ (hecho). Mejoras posibles: exportar como imagen, ver hermanos de distintas madres/padres.
 2. Renombrar menciones al cambiar el nombre de una ficha.
 3. Editor para **dibujar** mapas (terreno, ríos, regiones) además de subir imagen; capas políticas.
 4. Plantillas editables por el usuario (campos propios por categoría, no solo por ficha).

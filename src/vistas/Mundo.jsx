@@ -32,6 +32,7 @@ export default function Mundo() {
         <div className="mundo-nombre">{mundo.nombre}</div>
         {it(`/m/${mid}`, "◈", "Compendio", null, true)}
         {it(`/m/${mid}/relaciones`, "⟁", "Relaciones")}
+        {it(`/m/${mid}/arbol`, "⚭", "Linajes")}
         {it(`/m/${mid}/cronologia`, "⧗", "Cronología")}
         {it(`/m/${mid}/mapas`, "⌖", "Mapas")}
         {grupos.map((g) => (

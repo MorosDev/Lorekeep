@@ -10,6 +10,7 @@ import EditarFicha from "./vistas/EditarFicha.jsx";
 import Cronologia from "./vistas/Cronologia.jsx";
 import Mapas from "./vistas/Mapas.jsx";
 import Ajustes from "./vistas/Ajustes.jsx";
+import Arbol from "./vistas/Arbol.jsx";
 
 // El grafo y el mapa usan librerías pesadas: se cargan solo cuando los abres
 const Relaciones = lazy(() => import("./vistas/Relaciones.jsx"));
@@ -28,6 +29,8 @@ export default function App() {
           <Route path="f/:fid/editar" element={<EditarFicha />} />
           <Route path="relaciones" element={<Suspense fallback={<Cargando />}><Relaciones /></Suspense>} />
           <Route path="cronologia" element={<Cronologia />} />
+          <Route path="arbol" element={<Arbol />} />
+          <Route path="arbol/:fid" element={<Arbol />} />
           <Route path="mapas" element={<Mapas />} />
           <Route path="mapas/:mapaId" element={<Suspense fallback={<Cargando />}><Mapa /></Suspense>} />
           <Route path="ajustes" element={<Ajustes />} />
