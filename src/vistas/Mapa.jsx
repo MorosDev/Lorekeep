@@ -89,6 +89,7 @@ export default function Mapa() {
         <Link className="btn solo" to={`/m/${mid}/mapas`} aria-label="Mapas">←</Link>
         <div><div className="eyebrow">Mapa</div><h1>{mapa.nombre}</h1></div>
         <div className="acciones">
+          {mapa.dibujo && <Link className="btn oro" to={`/m/${mid}/mapas/${mapa.id}/dibujar`}>✎ Editar dibujo</Link>}
           <button className={"btn" + (poniendo ? " oro" : "")} onClick={() => setPoniendo((v) => !v)}>{poniendo ? "Toca el mapa donde va…" : "⌖ Poner pin"}</button>
           <button className="btn" onClick={() => setNombres((v) => !v)}>{nombres ? "Ocultar nombres" : "Ver nombres"}</button>
           <button className="btn peligro solo" onClick={() => setBorrando(true)} aria-label="Borrar mapa" title="Borrar mapa">🗑</button>

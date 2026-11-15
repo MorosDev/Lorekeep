@@ -15,6 +15,7 @@ import Arbol from "./vistas/Arbol.jsx";
 // El grafo y el mapa usan librerías pesadas: se cargan solo cuando los abres
 const Relaciones = lazy(() => import("./vistas/Relaciones.jsx"));
 const Mapa = lazy(() => import("./vistas/Mapa.jsx"));
+const EditorMapa = lazy(() => import("./vistas/EditorMapa.jsx"));
 const Cargando = () => <p className="ayuda">Cargando…</p>;
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="arbol/:fid" element={<Arbol />} />
           <Route path="mapas" element={<Mapas />} />
           <Route path="mapas/:mapaId" element={<Suspense fallback={<Cargando />}><Mapa /></Suspense>} />
+          <Route path="mapas/:mapaId/dibujar" element={<Suspense fallback={<Cargando />}><EditorMapa /></Suspense>} />
           <Route path="ajustes" element={<Ajustes />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
