@@ -193,3 +193,23 @@ a.chip:hover { border-color: var(--oro); text-decoration: none; }
 .arbol-linea { fill: none; stroke: #6b5b45; stroke-width: 1.6; }
 .arbol-pareja line { stroke: var(--oro); stroke-width: 1.4; }
 .arbol-hermanos { fill: none; stroke: #5a4f68; stroke-width: 1.4; stroke-dasharray: 4 4; }
+
+/* Editor de mapas: herramientas a la izquierda, lienzo a la derecha */
+.editor-mapa { display: grid; grid-template-columns: minmax(0, 250px) minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 760px) { .editor-mapa { grid-template-columns: minmax(0, 1fr); } .editor-mapa .herramientas { order: 2; } }
+.herramientas { display: grid; gap: 12px; background: var(--panel); border: 1px solid var(--raya); border-radius: var(--radio); padding: 12px; }
+.grupo-h { display: grid; gap: 8px; }
+.grupo-h + .grupo-h { border-top: 1px solid var(--raya); padding-top: 12px; }
+.grupo-h:first-child { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+.herr { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--raya); background: var(--panel2); cursor: pointer; font-size: 13px; }
+.herr span { width: 18px; text-align: center; }
+.herr.activa { border-color: var(--oro); color: var(--oro); background: var(--oro-suave); }
+.paleta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+.paleta .color { display: flex; align-items: center; gap: 7px; padding: 5px 7px; border-radius: 7px; border: 1px solid transparent; background: none; cursor: pointer; font-size: 12.5px; text-align: left; }
+.paleta .color span { width: 16px; height: 16px; border-radius: 4px; border: 1px solid #0006; flex: none; }
+.paleta .color.activo { border-color: var(--oro); background: var(--oro-suave); }
+.lienzo-editor { overflow: auto; max-height: 78vh; border: 1px solid var(--raya); border-radius: var(--radio); background: #0b0910; min-height: 300px; }
+.lienzo-editor canvas { display: block; touch-action: none; cursor: crosshair; image-rendering: auto; }
+.lienzo-editor canvas.herr-mover { cursor: grab; }
+.lienzo-editor canvas.herr-texto { cursor: text; }
+.lienzo-editor canvas.herr-borrar { cursor: not-allowed; }
