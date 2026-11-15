@@ -10,7 +10,7 @@ App web (PWA instalable) para crear mundos ficticios, de **Moros** (principiante
 - GitHub Pages publica solo con cada push a `main`. En el repo: Settings → Pages → Source = **GitHub Actions**.
 
 ## Arquitectura
-- Vite + React 18 (JS, sin TypeScript) · rutas con `HashRouter` (`#/m/:mid/...`) para que Pages no necesite servidor · `base: "/lorekeep/"` en `vite.config.js`.
+- Vite + React 18 (JS, sin TypeScript) · rutas con `HashRouter` (`#/m/:mid/...`) para que Pages no necesite servidor · `base: "./"` en `vite.config.js` (rutas relativas; el repo es `MorosDev/Lorekeep` con mayúscula y Pages respeta mayúsculas: `morosdev.github.io/Lorekeep/`).
 - **Datos:** Dexie (IndexedDB) en `src/db.js`. Tablas: `mundos`, `fichas`, `relaciones`, `eventos`, `mapas`, `imagenes` (Blob, achicadas a 1600 px; mapas a 4096). Todo lleva `mundoId`. Si cambias tablas o índices: **nueva** `db.version(N)` (nunca edites la 1), o se rompen los datos de quien ya la usa.
 - **Fichas:** `{ id, mundoId, tipo, nombre, resumen, imagen, datos, listas, secciones, etiquetas, extras }`. `datos[x]` es texto o `{ ref: idDeFicha }`. Los tipos y lo que pregunta cada uno: `src/plantillas.js` (`CATEGORIAS_BASE` se copia a cada mundo nuevo; cada mundo puede editar las suyas en Ajustes; tipos inventados usan `PLANTILLA_LIBRE`).
 - **Menciones:** `@Nombre` / `@[Nombre con espacios]`, se resuelven por nombre al mostrar (`TextoLore`, `mencionesDe` en `src/componentes/util.jsx`). No se guardan como ids: si renombras una ficha, las menciones viejas quedan "rotas" (se ven en gris). Pendiente: ofrecer renombrar las menciones.

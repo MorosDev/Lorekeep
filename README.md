@@ -20,7 +20,7 @@ Todo se guarda **solo en tu dispositivo** (IndexedDB). No hay cuentas ni servido
 
 ```sh
 npm install
-npm run dev      # abre http://localhost:5173/lorekeep/
+npm run dev      # abre http://localhost:5173/
 npm run build    # versión final en dist/
 ```
 
