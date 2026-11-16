@@ -2,6 +2,7 @@
 // Para respaldar o pasar un mundo a otro aparato: exportar / importar (abajo).
 import Dexie from "dexie";
 import { CATEGORIAS_BASE } from "./plantillas";
+import { cambiarEnTexto } from "./menciones";
 
 export const db = new Dexie("lorekeep");
 
@@ -62,6 +63,28 @@ export async function borrarFicha(f) {
     await db.fichas.delete(f.id);
     await tocarMundo(f.mundoId);
   });
+}
+
+// Al renombrar una ficha: cambia "@Viejo" por "@Nuevo" en todos los textos del mundo (fichas y cronología).
+// Con soloContar = true no cambia nada, solo dice cuántas hay (para preguntar antes).
+export async function renombrarMenciones(mundoId, viejo, nuevo, soloContar = false) {
+  let total = 0;
+  await db.transaction("rw", [db.fichas, db.eventos], async () => {
+    for (const f of await db.fichas.where("mundoId").equals(mundoId).toArray()) {
+      let n = 0;
+      const r = cambiarEnTexto(f.resumen, viejo, nuevo); n += r.n;
+      const secciones = {};
+      for (const [k, v] of Object.entries(f.secciones || {})) { const s = cambiarEnTexto(v, viejo, nuevo); secciones[k] = s.texto; n += s.n; }
+      if (n && !soloContar) await db.fichas.update(f.id, { resumen: r.texto, secciones });
+      total += n;
+    }
+    for (const e of await db.eventos.where("mundoId").equals(mundoId).toArray()) {
+      const r = cambiarEnTexto(e.texto, viejo, nuevo);
+      if (r.n && !soloContar) await db.eventos.update(e.id, { texto: r.texto });
+      total += r.n;
+    }
+  });
+  return total;
 }
 
 // ── Imágenes: se guardan como archivo (Blob), achicadas para no llenar el celular ──

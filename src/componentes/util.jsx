@@ -51,8 +51,8 @@ export function useAviso() {
 }
 
 // ── Menciones: en cualquier texto, @Nombre (o @[Nombre con espacios]) enlaza a esa ficha ──
-const RE_MENCION = /@\[([^\]]{1,80})\]|@([\p{L}\p{N}_'’-]{2,40})/gu;
-export const normal = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+import { RE_MENCION, normal } from "../menciones";
+export { normal };
 
 export function nombresDe(fichas) {
   const m = new Map();

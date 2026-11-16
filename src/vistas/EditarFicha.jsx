@@ -1,9 +1,9 @@
 // src/vistas/EditarFicha.jsx — editar una ficha. Guarda solo mientras escribes (no hay botón de guardar que olvidar).
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useOutletContext, useParams } from "react-router-dom";
-import { db, guardarFicha, guardarImagen } from "../db";
+import { db, guardarFicha, guardarImagen, renombrarMenciones } from "../db";
 import { plantillaDe } from "../plantillas";
-import { useImagen, BuscarFicha, ElegirImagen } from "../componentes/util.jsx";
+import { useImagen, BuscarFicha, ElegirImagen, Ventana } from "../componentes/util.jsx";
 
 // Campo que apunta a otra ficha (Especie → "Demonio")
 function CampoRef({ d, valor, cambiar, mid, fichas }) {
@@ -26,20 +26,35 @@ export default function EditarFicha() {
   const [pestana, setPestana] = useState(0);
   const url = useImagen(f?.imagen);
   const primera = useRef(true);
+  // El nombre con el que se abrió (o el último ya revisado), para saber si cambió
+  const nombreAntes = useRef(original?.nombre);
+  const [renombre, setRenombre] = useState(null); // { viejo, nuevo, n } mientras se pregunta
   const reloj = useRef(0);
 
   // Si la ficha llega después (recarga de la página), se toma una sola vez
-  useEffect(() => { if (!f && original) setF(original); }, [original, f]);
+  useEffect(() => { if (!f && original) { setF(original); nombreAntes.current = original.nombre; } }, [original, f]);
 
-  // Guardado automático medio segundo después de dejar de escribir
+  // Al terminar de escribir el nombre: si otros textos mencionaban el nombre viejo, pregunta si cambiarlos
+  const revisarNombre = async () => {
+    const viejo = nombreAntes.current, nuevo = f.nombre.trim();
+    if (!viejo || !nuevo || viejo === nuevo) return;
+    const n = await renombrarMenciones(mid, viejo, nuevo, true);
+    if (n) setRenombre({ viejo, nuevo, n });
+    else nombreAntes.current = nuevo;
+  };
+
+  // Guardado automático medio segundo después de dejar de escribir.
+  // "pendiente" guarda la última versión sin guardar: si sales antes del medio segundo, se guarda al salir.
+  const pendiente = useRef(null);
   useEffect(() => {
     if (!f) return;
     if (primera.current) { primera.current = false; return; }
     setEstado("Guardando…");
+    pendiente.current = f;
     clearTimeout(reloj.current);
-    reloj.current = setTimeout(async () => { await guardarFicha(f); setEstado("Guardado ✓"); }, 500);
-    return () => clearTimeout(reloj.current);
+    reloj.current = setTimeout(async () => { pendiente.current = null; await guardarFicha(f); setEstado("Guardado ✓"); }, 500);
   }, [f]);
+  useEffect(() => () => { clearTimeout(reloj.current); if (pendiente.current) guardarFicha(pendiente.current); }, []);
 
   if (!f) return original === undefined ? <p>Esa ficha no existe. <Link to={`/m/${mid}`}>Volver</Link></p> : null;
   const P = plantillaDe(f.tipo);
@@ -59,7 +74,7 @@ export default function EditarFicha() {
       <div className="ficha">
         <div style={{ display: "grid", gap: 16 }}>
           <div style={{ display: "grid", gridTemplateColumns: "minmax(0,2fr) minmax(0,1fr)", gap: 12 }}>
-            <label className="campo"><span>Nombre</span><input type="text" id="f-nombre" value={f.nombre} onChange={(e) => pon("nombre", e.target.value)} /></label>
+            <label className="campo"><span>Nombre</span><input type="text" id="f-nombre" value={f.nombre} onChange={(e) => pon("nombre", e.target.value)} onBlur={revisarNombre} /></label>
             <label className="campo"><span>Tipo</span>
               <select id="f-tipo" value={f.tipo} onChange={(e) => pon("tipo", e.target.value)}>
                 {mundo.categorias.map((c) => <option key={c.clave} value={c.clave}>{c.icono} {c.uno}</option>)}
@@ -121,6 +136,15 @@ export default function EditarFicha() {
         </div>
         <textarea id={`s-${seccion}`} rows={12} value={f.secciones?.[seccion] || ""} onChange={(e) => ponEn("secciones", seccion, e.target.value)} placeholder={`${seccion} de ${f.nombre}…`} />
       </section>
+      {renombre && (
+        <Ventana titulo="¿Cambiar también las menciones?" alCerrar={() => { nombreAntes.current = renombre.nuevo; setRenombre(null); }}>
+          <p style={{ margin: 0 }}>En otros textos hay <b>{renombre.n}</b> {renombre.n === 1 ? "mención" : "menciones"} de <b>@{renombre.viejo}</b>. Si no las cambias, quedarán en gris (sin enlace).</p>
+          <div className="botones">
+            <button className="btn" onClick={() => { nombreAntes.current = renombre.nuevo; setRenombre(null); }}>Dejarlas así</button>
+            <button className="btn oro" onClick={async () => { await renombrarMenciones(mid, renombre.viejo, renombre.nuevo); nombreAntes.current = renombre.nuevo; setRenombre(null); setEstado(`Cambiadas ${renombre.n} menciones ✓`); }}>Cambiarlas a @{renombre.nuevo}</button>
+          </div>
+        </Ventana>
+      )}
     </>
   );
 }
