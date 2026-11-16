@@ -6,6 +6,8 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { db, borrarFicha, nuevoId, tocarMundo } from "../db";
 import { plantillaDe, RELACIONES_SUGERIDAS } from "../plantillas";
 import { useImagen, TextoLore, Ventana, BuscarFicha, mencionesDe, Retrato } from "../componentes/util.jsx";
+import { ListaAqui } from "../componentes/PanelLugar.jsx";
+import { queHayEn, pinesDe } from "../lugares";
 
 // Valor de un dato: texto o enlace a otra ficha
 export function ValorDato({ v, fichas, mid }) {
@@ -53,6 +55,7 @@ export default function Ficha() {
   const url = useImagen(f?.imagen);
   const relaciones = useLiveQuery(() => db.relaciones.where("mundoId").equals(mid).toArray(), [mid]) || [];
   const eventos = useLiveQuery(() => db.eventos.where("mundoId").equals(mid).toArray(), [mid]) || [];
+  const mapas = useLiveQuery(() => db.mapas.where("mundoId").equals(mid).toArray(), [mid]) || [];
   const [pestana, setPestana] = useState(0);
   const [relacionando, setRelacionando] = useState(false);
   const [borrando, setBorrando] = useState(false);
@@ -70,6 +73,13 @@ export default function Ficha() {
   const secciones = P.secciones.filter((s) => f.secciones?.[s]?.trim());
   const listas = P.listas.map(([k, n]) => [n, (f.listas?.[k] || []).filter((x) => x.trim())]);
   const rels = relaciones.filter((r) => r.de === f.id || r.a === f.id).map((r) => ({ ...r, otra: fichas.find((x) => x.id === (r.de === f.id ? r.a : r.de)), sale: r.de === f.id })).filter((r) => r.otra);
+  // Primer mapa donde está marcada (o, si no, donde está el lugar donde vive/nació)
+  const enMapa = pinesDe(f.id, mapas)[0] || (() => {
+    const casa = [f.datos?.origen, f.datos?.sede, f.datos?.habitat, f.datos?.ubicacion, f.datos?.dentro].find((v) => v?.ref)?.ref
+      || relaciones.find((r) => r.de === f.id && /vive|habita|reside|naci|esta en/.test(r.tipo.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()))?.a;
+    return casa ? pinesDe(casa, mapas)[0] : null;
+  })();
+  const hayAqui = (() => { const q = queHayEn(f, fichas, relaciones, eventos); return f.tipo === "lugar" || f.tipo === "nacion" || q.aqui.length || q.dentro.length; })();
   const susEventos = eventos.filter((e) => (e.fichas || []).includes(f.id)).sort((a, b) => a.fecha - b.fecha);
 
   return (
@@ -84,6 +94,7 @@ export default function Ficha() {
           <Link className="btn oro" to={`/m/${mid}/f/${f.id}/editar`}>✎ Editar</Link>
           <button className="btn" onClick={() => setRelacionando(true)}>⟁ Relacionar</button>
           <Link className="btn" to={`/m/${mid}/arbol/${f.id}`}>⚭ Árbol</Link>
+          {enMapa && <Link className="btn" to={`/m/${mid}/mapas/${enMapa.mapa.id}?foco=${enMapa.pin.id}`}>⌖ Ver en el mapa</Link>}
           <button className="btn peligro solo" onClick={() => setBorrando(true)} aria-label="Borrar ficha" title="Borrar ficha">🗑</button>
         </div>
       </div>
@@ -119,6 +130,8 @@ export default function Ficha() {
           <TextoLore texto={f.secciones[secciones[Math.min(pestana, secciones.length - 1)]]} nombres={nombres} mid={mid} />
         </section>
       )}
+
+      {hayAqui ? <section className="bloque"><h2>En {f.nombre}</h2><ListaAqui lugar={f} mundo={mundo} mid={mid} compacto /></section> : null}
 
       <section className="bloque">
         <h2>Relaciones</h2>

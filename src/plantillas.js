@@ -52,7 +52,7 @@ export const PLANTILLAS = {
     secciones: ["Mito", "Culto", "Manifestaciones"],
   },
   lugar: {
-    datos: [O("tipoLugar", "Tipo", ["Ciudad", "Pueblo", "Región", "Continente", "Bosque", "Montaña", "Ruinas", "Mar", "Edificio", "Plano", "Otro"]), R("dentro", "Está en", "lugar"), R("nacion", "Nación", "nacion"), T("poblacion", "Población"), T("clima", "Clima")],
+    datos: [O("tipoLugar", "Tipo", ["Ciudad", "Pueblo", "Fortaleza", "Templo", "Puerto", "Torre", "Ruinas", "Cueva", "Bosque", "Montaña", "Región", "Continente", "Mar", "Edificio", "Plano", "Otro"]), R("dentro", "Está en", "lugar"), R("nacion", "Nación", "nacion"), T("poblacion", "Población"), T("clima", "Clima")],
     listas: [["lugaresClave", "Lugares clave"], ["recursos", "Recursos"]],
     secciones: ["Descripción", "Historia", "Geografía"],
   },

@@ -93,7 +93,8 @@ function NuevaEtiqueta({ alGuardar, alCerrar }) {
   const [e, setE] = useState({ texto: "", tamano: "m", estilo: "tierra", giro: 0 });
   const pon = (k, v) => setE((x) => ({ ...x, [k]: v }));
   return (
-    <Ventana titulo="Poner un nombre" alCerrar={alCerrar}>
+    <Ventana titulo="Nombre decorativo" alCerrar={alCerrar}>
+      <p className="ayuda" style={{ margin: 0 }}>Para mares, cordilleras o regiones: solo se pinta en el dibujo. Para ciudades y pueblos que lleven a su ficha, usa <b>⌖ Poner lugar</b> en el mapa.</p>
       <form onSubmit={(ev) => { ev.preventDefault(); if (e.texto.trim()) alGuardar({ ...e, texto: e.texto.trim() }); }} style={{ display: "grid", gap: 14 }}>
         <label className="campo"><span>Texto</span><input type="text" id="eti-texto" value={e.texto} onChange={(x) => pon("texto", x.target.value)} placeholder="Ej. Mar de los Susurros" autoFocus /></label>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
