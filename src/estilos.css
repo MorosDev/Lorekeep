@@ -213,3 +213,23 @@ a.chip:hover { border-color: var(--oro); text-decoration: none; }
 .lienzo-editor canvas.herr-mover { cursor: grab; }
 .lienzo-editor canvas.herr-texto { cursor: text; }
 .lienzo-editor canvas.herr-borrar { cursor: not-allowed; }
+
+/* Mapa con panel de lugar: el panel flota a la derecha del mapa (abajo en el celular) */
+.mapa-con-panel { position: relative; }
+.panel-lugar {
+  position: absolute; z-index: 500; top: 12px; right: 12px; bottom: 12px; width: min(340px, calc(100% - 24px)); overflow-y: auto;
+  background: #18141ff2; border: 1px solid var(--raya); border-radius: 12px; padding: 16px; display: grid; gap: 10px; align-content: start;
+  box-shadow: 0 10px 30px #0009; backdrop-filter: blur(6px);
+}
+.panel-lugar h2 { font: 600 22px var(--f-titulo); margin: 0; }
+.panel-lugar .foto { border-radius: 8px; max-height: 150px; width: 100%; object-fit: cover; }
+.panel-lugar .cerrar { position: absolute; top: 8px; right: 8px; }
+.resumen-lugar { font: 15px/1.5 var(--f-lore); color: #d6cfde; margin: 0; }
+@media (max-width: 700px) { .panel-lugar { top: auto; left: 8px; right: 8px; bottom: 8px; width: auto; max-height: 60%; } }
+.lista-aqui { display: grid; gap: 8px; }
+.sub-aqui { font: 600 11px var(--f-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--oro); margin-top: 6px; }
+.lista-aqui .como { font: italic 13.5px var(--f-lore); color: var(--tenue); margin-bottom: 4px; }
+.tipos-lugar { display: flex; flex-wrap: wrap; gap: 6px; }
+.tipos-lugar .chip { cursor: pointer; }
+.tipos-lugar .chip.activo { border-color: var(--oro); color: var(--oro); background: var(--oro-suave); }
+.pin.elegido { outline: 3px solid #fff; outline-offset: 1px; }
